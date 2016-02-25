@@ -4,8 +4,6 @@ env:
   - base_image: quay.io/5003/centos-ansible-ci
     roles_path: /etc/ansible/roles/ci_test/
 services: docker
-install:
-  - ansible-galaxy install 5003.elixir_lang 5003.nodejs
 script:
   - container_id=$(mktemp)
   - >
@@ -13,6 +11,9 @@ script:
      --volume="${PWD}":${roles_path}:ro
      --volume=/sys/fs/cgroup/:/sys/fs/cgroup/:ro
      ${base_image} > "${container_id}"
+  - >
+     sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm
+     ansible-galaxy install 5003.elixir_lang 5003.nodejs
   - >
      sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm
      ansible-playbook ${roles_path}tests/test.yml --syntax-check

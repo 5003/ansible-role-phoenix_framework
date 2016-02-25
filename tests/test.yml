@@ -3,4 +3,6 @@
   connection: local
   remote_user: root
   roles:
+    - 5003.elixir_lang
+    - 5003.nodejs
     - ci_test
